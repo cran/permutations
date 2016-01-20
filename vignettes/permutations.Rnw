@@ -1,0 +1,166 @@
+\documentclass[nojss]{jss}  
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subfig}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% just as usual
+\author{Robin K. S. Hankin}
+\title{Discrete mathematics with \proglang{R}:
+introducing the \pkg{permutations} package}
+
+
+%\VignetteIndexEntry{A vignette for the magic package}
+%% for pretty printing and a nice hypersummary also set:
+%% \Plainauthor{Achim Zeileis, Second Author} %% comma-separated
+
+\Plaintitle{Discrete mathematics with R:
+introducing the permutations package}
+\Shorttitle{The \pkg{permutations} package}
+
+
+
+%% an abstract and keywords
+\Abstract{
+  Here I introduce the \pkg{permutations} package, for
+  manipulating and permutations of a finite set. 
+}
+
+\Keywords{Permutations}
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+
+\Address{
+Robin K. S. Hankin\\
+AUT University\\
+Auckland\\
+New Zealand\\
+E-mail: \email{hankin.robin@gmail.com}
+
+}
+
+%% need no \usepackage{Sweave.sty}
+
+\begin{document}
+
+\section{Overview}
+
+Permutations of a finite set are an important and interesting branch
+of mathematics, having links in combinatorics~\citep{stanley2011},
+group theory~\citep{milne2013}, and various branches of recreational
+mathematics~\citep{averbach2000}.
+
+\section{Introduction}
+
+We consider bijections from the
+set~$\left[n\right]=\left\{1,2,3,\ldots,n\right\}$ to itself.  For a
+specific example,
+take~$f\colon\left[9\right]\longrightarrow\left[9\right]$ defined by
+the following diagram:
+
+\[
+\left(
+\begin{array}{ccccccccc}
+1&2&3&4&5&6&7&8&9\\
+9&2&6&3&5&4&1&7&8
+\end{array}
+\right)
+\]
+
+Thus~$f(1)=9$, $f(2)=2$, and so on.  Function~$f\left(\cdot\right)$ 
+may be inverted by inspection:
+
+\[
+\left(
+\begin{array}{ccccccccc}
+1&2&3&4&5&6&7&8&9\\
+7&2&4&6&5&3&8&9&1
+\end{array}
+\right)
+\]
+
+If we wish to determine, say,
+$f\left(f\left(f\left(\cdot\right)\right)\right)=f^3\left(\cdot\right)$,
+then it is more convenient to represent~$f$ in {\em cycle form}:
+
+\[
+\left(1987\right)\left(346\right)
+\]
+
+which is a compact representation of the fact that~$1
+\overset{f}{\longrightarrow}9 \overset{f}{\longrightarrow}8
+\overset{f}{\longrightarrow}7 \overset{f}{\longrightarrow}1$ and~$3
+\overset{f}{\longrightarrow}4 \overset{f}{\longrightarrow}6
+\overset{f}{\longrightarrow}3$, the remaining elements mapping to
+themselves.  Then it is clear that~$f^3$ is the
+cycle~$\left(1789\right)$.
+
+The \proglang{R} idiom for the above  would be:
+
+<<start>>=
+library("permutations")
+f <- as.word(c(9,2,6,3,5,4,1,7,8))
+f
+inverse(f)
+as.cycle(f)
+f^3
+@ 
+
+(a dot in the word form indicates that the element in question is
+mapped to itself).  Given another such cycle~$g=\left(142\right)$ then
+we may combine~$f$ and~$g$ in two ways with~$fg=\left(19872364\right)$
+and~$gf=\left(12643987\right)$.  In R:
+  
+<<fg>>=
+g <- as.cycle(c(1,4,2))
+f*g
+g*f
+@ 
+
+One measure of the non-commutativity of $f$ and~$g$ is the
+\emph{commutator}, here defined as $f^{-1}g^{-1}fg$:
+    
+<<commutator>>=
+commutator(f,g)
+@     
+
+The package is vectorized.  Suppose we wish to consider the symmetry
+group of an icosahedron, known to be the even permutations of a set of
+five elements:
+    
+<<>>=
+S5 <- as.cycle(t(partitions::perms(5)))
+A5 <- S5[is.even(S5)]
+A5
+@     
+
+
+where function \code{perms()} is taken from the \pkg{partitions}
+package~\citep{hankin2006}.  Thus \code{S5} is all permutations of
+size~5, and~\code{A5} just the even permutations.  We might consider
+the first four elements of vector \code{A5}, and combine with a cycle
+of length 9:
+
+<<various>>=
+A5[1:4]*cyc_len(9)
+@ 
+
+As a final illustration, we may calculate the conjugate\footnote{The
+  conjugate of $x$ and $y$, written $x^y$, is defined as $y^{-1}xy$;
+  the notation is motivated by the fact that~$x^zy^z=\left(xy\right)^z$
+  and~$x^{yx} = \left(x^y\right)^z$} the of the four permutations with
+another element:
+    
+<<>>=
+A5[1:4]^as.word(7:1)
+as.cycle(A5[1:4]^as.word(7:1))
+@     
+
+
+
+\bibliography{permutations}
+\end{document}
