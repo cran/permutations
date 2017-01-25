@@ -38,6 +38,11 @@ Function \code{is.id.list()} tests a cyclist for identityness.
 \author{
 Robin K. S. Hankin
 }
+\note{
+The identity permutations documented here are distinct from the null
+permutations documented at \code{nullperm.Rd}.
+}
+  
 \seealso{\code{is.derangement},\code{nullperm}}
 \examples{
 is.id(id)

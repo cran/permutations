@@ -49,7 +49,7 @@ word_prod_single <- function(e1,e2){   # works for words (in vector form)
     stopifnot(length(e1)==length(e2))
     e1 <- as.vector(e1)
     e2 <- as.vector(e2)
-    return(e2[e1])
+    return(e2[e1])  # this is why we need arrays starting at 1, not 0
 }
 
 helper <- function(e1,e2){  # sorts out recycling for binary

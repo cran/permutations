@@ -26,15 +26,23 @@ These objects are here to deal with the case where a length-zero
 permutation is extracted.  The behaviour of these null objects is not
 entirely consistent.
 }
+\note{
+  The objects documented here are distinct from the identity
+  permutation, \code{id}, documented separately.
+}
+
+\seealso{\code{\link{id}}}
+
 \examples{
 
 rperm(10,4)[0]  # null word
 
 as.cycle(1:5)[0]  # null cycle
 
-
+data(megaminx)
 c(NULL,megaminx)      # probably not what the user intended...
 c(nullcycle,megaminx) # more useful.
+c(id,megaminx)        # also useful.
 
 }
 \keyword{datasets}

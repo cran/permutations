@@ -3,8 +3,8 @@ singleword_valid <- function(w){  # takes an integer vector
     if(identical(seq_len(max(w)),sort(w))){
         return(TRUE)
     } else {
-          stop("invalid word: rows should be permutations of seq_len(ncol(w))")
-      }
+        stop("invalid word: rows should be permutations of seq_len(ncol(w))")
+    }
 }
 
 cyclist_valid <- function(x){   # takes a cyclist and checks it for validity

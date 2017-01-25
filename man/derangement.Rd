@@ -15,13 +15,13 @@ is.derangement(x)
 }
 \value{
 A vector of Booleans corresponding to whether the permutations are
-derangments or not.
+derangements or not.
 }
 \note{
 The identity permutation is problematic because it potentially has zero
 size.
 
-The identity element is not a derangement, although the size-0 identity
+The identity element is not a derangement, although the (zero-size) identity
 cycle and permutation both return \code{TRUE} under the natural R idiom
 \code{all(P != seq_len(size(P)))}. 
 }

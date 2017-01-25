@@ -1,6 +1,16 @@
 # This file defines dodecahedron_face, dodecahedron_edge,
 # full_dodecahedron_face, and full_dodecahedron_edge.
 
+# This file is not really intended to be human-readable.
+
+# The source code for these statements is in
+# inst/dodecahedron_group.py and inst/full_dodecahedron_group.py.  To
+# create this file, execute dodecahedron_group.py in SAGE and
+# cut-and-paste the output of 'dod_edge' (and the other objects).
+
+
+
+
 dodecahedron_face <- as.cycle(c( "()", "(2,3,4,5,6)(7,11,10,9,8)",
 "(1,2,3)(4,6,8)(5,9,7)(10,12,11)",
 "(1,2)(3,6)(4,9)(5,8)(7,10)(11,12)",

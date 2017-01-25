@@ -25,9 +25,8 @@ get_cyc(x,elt)
 Robin K. S. Hankin
 }
 \examples{
+data(megaminx)
 get1(megaminx)
-
-
 get1(megaminx[1])
 get1(megaminx[1],drop=TRUE)
 

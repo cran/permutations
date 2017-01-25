@@ -17,7 +17,16 @@ Finds which elements of a permutation object are fixed
   \item{\dots}{further arguments (currently unused)}
 }
 \value{
-Returns a Boolean vector corresponding to the fixed elements
+Returns a Boolean vector corresponding to the fixed elements of a permutation.
+}
+\note{
+
+The function is vectorized; if given a vector of permutations,
+\code{fixed()} returns a Boolean vector showing which elements are fixed
+by \emph{all} of the permutations.
+
+This function has two methods: \code{fixed.word()} and
+\code{fixed.cycle()}, neither of which coerce.
 }
 \author{
 Robin K. S. Hankin
@@ -28,6 +37,9 @@ Robin K. S. Hankin
 \examples{
 fixed(as.cycle(1:3)+as.cycle(8:9))   # elements 4,5,6,7 are fixed
 fixed(id)
+
+
+data(megaminx)
 fixed(megaminx)
 
 

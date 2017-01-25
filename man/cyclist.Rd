@@ -5,6 +5,7 @@
 \alias{char2cyclist_single}
 \alias{cyclist2word_single}
 \alias{nicify_cyclist}
+\alias{nicify}
 \alias{remove_length_one}
 \title{
 details of cyclists
@@ -31,9 +32,10 @@ nicify_cyclist(x,rm1=TRUE, smallest_first=TRUE)
 }
 \details{
 
-A \dfn{cyclist} is a list with elements that are integer vectors
-corresponding to the cycles of a permutation.  This object is informally
-known as a cyclist, but there is no S3 class corresponding to it.
+A \dfn{cyclist} is an object corresponding to a permutation P.  It is a
+list with elements that are integer vectors corresponding to the cycles
+of P.  This object is informally known as a cyclist, but there is no S3
+class corresponding to it.
 
 An object of S3 class \dfn{cycle} is a (possibly named) list of
 cyclists.  NB: there is an unavoidable notational clash here.  When
@@ -42,7 +44,7 @@ cycle; when considering R objects, \dQuote{cycle} means \dQuote{an R
 object of class \dfn{cycle} whose elements are permutations written in
 cycle form}.
 
-The elements of a cyclist are the disjoint cycles.  Note the
+The elements of a cyclist are the disjoint group-theoretic cycles.  Note the
 redundancies inherent: firstly, because the cycles commute, their order
 is immaterial (and a list is ordered); and secondly, the cycles
 themselves are invariant under cyclic permutation.  Heigh ho.
@@ -65,15 +67,17 @@ are dealt with by \code{nicify_cyclist()}.
   \item Function \code{remove_length_one()} takes a cyclist and removes
   length-one cycles from it.
 
-  \item Function \code{vec2cyclist_single()} converts a vector into a
-  cyclist.  Length-one cycles are discarded.
+  \item Function \code{vec2cyclist_single()} takes a vector of integers,
+  interpreted as a word, and converts it into a cyclist.  Length-one
+  cycles are discarded.
 
   \item Function \code{vec2cyclist_single_cpp()} is a placeholder for a
   function that is not yet written.
 
-  \item Function \code{cyclist2word_single()} takes a cyclist and returns
-  a vector corresponding to a single word.  The user should use
-  \code{cycle2word()} as it takes a cycle object and returns a word object.
+  \item Function \code{cyclist2word_single()} takes a cyclist and
+  returns a vector corresponding to a single word.  This function is not
+  intended for everyday use; function \code{cycle2word()} is much more
+  user-friendly.
   
   \item Function \code{char2cyclist_single()} takes a character string
   like \dQuote{\code{(342)(19)}} and turns it into a cyclist, in this
@@ -84,11 +88,12 @@ are dealt with by \code{nicify_cyclist()}.
   a sensible way, so \dQuote{\code{(18,19)(2,5)}} is dealt with
   appropriately too.  The function is insensitive to spaces.  Also, one
   can give it an argument which does not correspond to a cycle object,
-  eg \code{char2cyclist_single("(94)(32)(19)(1)"}.  This is OK as far
-  as it goes (the function does not return an error), but to catch this
-  kind of error use \code{char2cycle()} which calls the validity checks.
+  eg \code{char2cyclist_single("(94)(32)(19)(1)")} (in which \dQuote{9}
+  is repeated).  The function does not return an error, but to catch
+  this kind of problem use \code{char2cycle()} which calls the validity
+  checks.
 
-  The user shoud use \code{char2cycle()} which executes validity checks
+  The user should use \code{char2cycle()} which executes validity checks
   and coerces to a cycle object.
 }
 }

@@ -45,6 +45,7 @@ degrees.  See the vignette for more details.
 }
 \examples{
 
+data(megaminx)
 megaminx
 megaminx^5  # should be the identity
 inverse(megaminx)  # turn each face anticlockwise

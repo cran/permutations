@@ -24,7 +24,7 @@ Returns an object of class \code{word}
 Robin K. S. Hankin
 }
 \note{
-  Argument \code{move} specifies a \emph{maximum} number of elements
+  Argument \code{moved} specifies a \emph{maximum} number of elements
   that do not map to themselves; the actual number of non-fixed elements
   might be lower (as some elements might map to themselves).
   }

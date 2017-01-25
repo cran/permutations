@@ -47,10 +47,12 @@ helper(e1,e2)
 
   The function \code{Ops.permutation()} passes binary arithmetic
   operators (\dQuote{\code{+}}, \dQuote{\code{*}}, \dQuote{\code{/}},
-  and \dQuote{\code{^}}) to the appropriate specialist function.
+  \dQuote{\code{^}}, and \dQuote{\code{==}}) to the appropriate
+  specialist function.
 
   Multiplication, as in \code{a*b}, is effectively
-  \code{word_prod(a,b)}; it coerces its arguments to word form.
+  \code{word_prod(a,b)}; it coerces its arguments to word form (because
+  \code{a*b = b[a]}).
 
   Raising permutations to integer powers, as in \code{a^n}, is
   \code{cycle_power(a,n)}; it coerces \code{a} to cycle form and returns
@@ -96,12 +98,10 @@ helper(e1,e2)
   The class of the returned object is the appropriate one.
 
   It would be nice to define a unary operator which inverted a
-  permutation.  I loathe the egregious superfluousness and conceptual
-  imbecility of \dQuote{\code{id/x}} to represent a permutation inverse:
-  the idiom introduces an utterly redundant object (\dQuote{\code{id}}),
-  and forces the use of a binary operator where a unary operator is
-  needed.  From a formalist and structuralist perspective, it sucks
-  donkey balls.
+  permutation.  I do not like \dQuote{\code{id/x}} to represent a
+  permutation inverse: the idiom introduces an utterly redundant object
+  (\dQuote{\code{id}}), and forces the use of a binary operator where a
+  unary operator is needed.
   
   The natural unary operator would be the exclamation mark, \code{!x}.
   However, redefining the exclamation mark to give permutation inverses,
@@ -133,6 +133,8 @@ x*inverse(x) == id  # all TRUE
 
 # the 'sum' of two permutations is defined if their cycles are disjoint:
 as.cycle(1:4) + as.cycle(7:9)
+
+data(megaminx)
 megaminx[1] + megaminx[7:12] 
 
 

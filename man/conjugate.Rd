@@ -46,9 +46,11 @@ permutations; permutations are coerced to cycle form because function
 
 are_conjugate(rperm(20,3),rperm(20,3))
 
-stopifnot(all(are_conjugate(megaminx,megaminx^as.cycle(sample(129)))))
+
 
 z <- rperm(300,4)
 stopifnot(all(are_conjugate(z,id)==is.id(z)))
 
+data(megaminx)
+stopifnot(all(are_conjugate(megaminx,megaminx^as.cycle(sample(129)))))
 }

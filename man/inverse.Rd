@@ -31,6 +31,11 @@ The package provides methods to invert objects of class \code{word}
 
 The user should use \code{inverse()} directly, which dispatches to
 either \code{inverse.word()} or \code{inverse.cycle()} as appropriate.
+
+Sometimes, using idiom such as \code{x^-1} or \code{id/x} gives neater
+code, although these may require coercion between word form and cycle
+form.
+
 }
 \value{
 Function \code{inverse()} returns an object of the same class as its argument.

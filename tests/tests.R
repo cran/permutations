@@ -102,7 +102,7 @@ x3 <- word(x3)
 
 shape_cyclist(list(list()))
 
-
+data(megaminx)
 m <- megaminx
 p <- megaminx
 m[1] <- id

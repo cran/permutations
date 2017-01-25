@@ -35,6 +35,7 @@ Robin K. S. Hankin
 \code{\link{fixed}}
 }
 \examples{
+data(megaminx)
 orbit(megaminx,13)
 
 

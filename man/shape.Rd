@@ -49,12 +49,13 @@ Robin K. S. Hankin
 \examples{
 shape(rperm(10,9)) # coerced to cycle
 
-m <- megaminx
 
-shape(m)
-shape(m*m[1])
 
-jj <- m*m[1]
+data(megaminx)
+
+shape(megaminx)
+jj <- megaminx*megaminx[1]
+
 stopifnot(identical(shape(jj),shape(tidy(jj))))  #tidy() does not change shape
 
 shapepart(rperm(10,5))

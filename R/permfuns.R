@@ -38,14 +38,14 @@
     if(all(sapply(jj,isTRUE))){
         x <- lapply(x,nicify_cyclist)    
         class(x) <- c("permutation", "cycle")  ## NB this is the
-                                               ## *only* place that
+        ## *only* place that
         ## class "cycle" is
-                                               ## assigned to an
-                                               ## object
+        ## assigned to an
+        ## object
         return(x)
     } else {
-          stop(jj)
-      }
+        stop(jj)
+    }
 }
 
 is.id <- function(x){ UseMethod("is.id",x) }
@@ -106,26 +106,26 @@ names.word <- function(x){rownames(x)}
     if(!all(unlist(lapply(a,is.word)))){
         stop("all arguments must be the same class")
     } else {
-          n <- max(unlist(lapply(a,size)))
-          a <- lapply(a,"size<-",n)
-          word(do.call("rbind", a))
-      }
+        n <- max(unlist(lapply(a,size)))
+        a <- lapply(a,"size<-",n)
+        word(do.call("rbind", a))
+    }
 }
 
 "c.cycle" <- function(...){
     if(!all(unlist(lapply(list(...),is.cycle)))){
         stop("all arguments must be the same class")
     } else {
-          return(cycle(unlist(list(...),recursive=FALSE)))
-      }
+        return(cycle(unlist(list(...),recursive=FALSE)))
+    }
 }
 
 addcols <- function(M,n){
-
+    
     ##takes a matrix and adds columns [corresponding to fixed
     ## elements] so the returned value has 'n' columns.  Used by
     ## as.word(), so cannot coerce output to class word.
-
+    
     if(nrow(M)==0){return(matrix(integer(0),0,n))}
     nm <- ncol(M)
     if(n>=nm){
@@ -136,7 +136,7 @@ addcols <- function(M,n){
 }
 
 as.word <- function(x,n=NULL){
-
+    
     ## This function is the user-friendly way to create a word object
     ## (compare word(), which is not terribly friendly).  Function
     ## as.word() does its best to coerce its argument to a word.
@@ -148,10 +148,10 @@ as.word <- function(x,n=NULL){
 
     if(is.word(x)){
         if(missing(n)){
-           return(x)
+            return(x)
         } else {
-           size(x) <- n
-          return(x)
+            size(x) <- n
+            return(x)
         }
     } else if(is.cycle(x)){
         return(cycle2word(x,n)) 
@@ -169,7 +169,15 @@ as.word <- function(x,n=NULL){
     }
 }
 
-print.word <- function(x, ...){  # contortions needed because x might have zero columns
+print.word <- function(x, h=getOption("print_word_as_cycle"), ...){  
+
+  if(!identical(h,FALSE)){
+    jj <- as.cycle(x)
+    print(jj)
+    return(jj)
+  }
+
+  ## contortions needed because x might have zero columns
     given <- x
     x <- unclass(x)
     if(is.null(rownames(x)) & length(x)>0){
@@ -187,8 +195,8 @@ print.word <- function(x, ...){  # contortions needed because x might have zero 
 }
 
 as.cycle <- function(x){   # does its best to coerce to cycle form.
-                           # Takes character strings and permutation
-                           # matrices
+                                        # Takes character strings and permutation
+                                        # matrices
 
     if(missing(x)){
         return(id)
@@ -206,20 +214,20 @@ as.cycle <- function(x){   # does its best to coerce to cycle form.
         names(out) <- rownames(x)
         return(cycle(out))
     } else {
-       stop("not recognised")
+        stop("not recognised")
     }
 }
 
 cyc_len <- function(n){as.cycle(seq_len(n))}
 
 char2cyclist_single <- function (x){
-
+    
     if(all(unlist(strsplit(x,"")) != ",")) {#no commas anywhere
         commas <- ""
     } else {
         commas <- ","
     }
-                                        
+    
         jj <- lapply(
             strsplit(
                 gsub(
@@ -239,9 +247,9 @@ char2cycle <- function(char){
 cycle2word <- function(x,n=NULL){  # cycle2word(as.cycle(1:5))
     if(is.null(n)){
         if(all(is.id(x))){
-          n <- 0
+            n <- 0
         } else {
-          n <- max(unlist(x,recursive=TRUE))}
+            n <- max(unlist(x,recursive=TRUE))}
     }
     word(do.call("rbind",lapply(x,cyclist2word_single,n=n)))
 }
@@ -249,10 +257,10 @@ cycle2word <- function(x,n=NULL){  # cycle2word(as.cycle(1:5))
 cyclist2word_single <- function(cyc,n){     #converts a cyclist to a single
                                         #permutation (vecor):
                                         #cycle2word_single(list(c(1,4,3),c(7,8)))
-
+    
     if(length(unlist(cyc))==0){ return(seq_len(n)) }  # checking for the identity
     maxn <-  max(unlist(cyc,recursive=TRUE))
-
+    
     if(missing(n)){
         n <- maxn
     } else {
@@ -260,7 +268,7 @@ cyclist2word_single <- function(cyc,n){     #converts a cyclist to a single
             stop("supplied value of 'n' is too small")
         }
     }
-        
+    
     out <- seq_len(n)
     for(i in seq_along(cyc)){
         out[cyc[[i]]] <- shift(out[cyc[[i]]],-1)
@@ -269,7 +277,7 @@ cyclist2word_single <- function(cyc,n){     #converts a cyclist to a single
 }
 
 print.cycle <- function(x,...){  # x is a cycle.  Use case: print(cycle(list(x,y,z)))
-
+    
     if((length(unlist(x))>0)){
         if(max(unlist(x,recursive=TRUE)) > 9){
             comma <- TRUE
@@ -528,7 +536,7 @@ size.cycle <- function(x){
 length.word <- function(x){ nrow(x) }
 
 trim <- function(x){
-#    stop("problems: trim(as.word(1:6)) should return the empty word, but doesn't")
+    ##    stop("problems: trim(as.word(1:6)) should return the empty word, but doesn't")
     stopifnot(is.word(x))
     if(length(x)==0){return(nullword)}
     if(all(is.id(x))){return(x)}
@@ -588,11 +596,11 @@ is.even <- function(x){sgn(x)==1}
 are_conjugate_single <- function(a,b){  # difficulties arise with the identity.
     stopifnot((length(a)==1) & (length(b)==1))
     if(is.id(a) & is.id(b)){
-       return(TRUE)
+        return(TRUE)
     } else if(xor(is.id(a), is.id(b))){
-       return(FALSE)
+        return(FALSE)
     } else {
-       return(identical(unname(sort(shape(a))),unname(sort(shape(b)))))
+        return(identical(unname(sort(shape(a))),unname(sort(shape(b)))))
     }
 }
 
@@ -686,3 +694,4 @@ permprod <- function(x){
     apply(jj,1,function(ind){orbit_single(unlist(unclass(cyc[ind[1]]),recursive=FALSE),n[ind[2]])})
 }
    
+"allperms" <- function(n){ word(t(perms(n))) }

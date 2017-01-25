@@ -39,12 +39,16 @@ Results in empty (that is, zero-column) words if a vector of identity
 permutations is given
 }
 \seealso{
-\code{\link{fixed}},\code{\link{size}}
+\code{\link{fixed}},\code{\link{size}},\code{\link{nicify_cyclist}}
 }
 \examples{
 tidy(as.cycle(5:3)+as.cycle(7:9))
 as.cycle(tidy(c(as.cycle(1:2),as.cycle(6:7))))
 
+
+nicify_cyclist(list(c(4,6), c(7), c(2,5,1), c(8,3)))
+
+data(megaminx)
 tidy(megaminx)  # has 120 columns, not 129
 stopifnot(all(unique(sort(unlist(as.cycle(tidy(megaminx)),recursive=TRUE)))==1:120))
 
@@ -52,7 +56,7 @@ jj <- megaminx*megaminx[1]
 stopifnot(identical(shape(jj),shape(tidy(jj))))  #tidy() does not change shape
 
 
-nicify_cyclist(list(c(4,6), c(7), c(2,5,1), c(8,3)))
+
 
 }
 
