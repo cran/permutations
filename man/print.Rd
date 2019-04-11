@@ -18,8 +18,8 @@ as.character_cyclist(y,comma=TRUE)
 }
 
 \arguments{
-  \item{x}{Object of class \code{permutation} with \code{word}s
-    dispatched to \code{print.word()} and \code{cycle}s dispatched to
+  \item{x}{Object of class \code{permutation} with \code{word} objects
+    dispatched to \code{print.word()} and \code{cycle} objects dispatched to
     \code{print.cycle()}}
   \item{h}{Boolean, with default \code{TRUE} meaning to coerce words
     to cycle form before printing.  See details}
@@ -43,6 +43,9 @@ Returns its argument invisibly, after printing it.
   of class word are printed as a matrix with rows being the permutations
   and fixed points indicated with a dot.
 
+  Function \code{as.character_cyclist()} is an internal function used by
+  \code{print.cycle()}, and is not really designed for the end-user.  It
+  takes a cyclist and returns a character string.
 }
 
 \author{
@@ -52,8 +55,27 @@ Robin K. S. Hankin
 \code{\link{nicify_cyclist}}
 }
 \examples{
+
+# generate a permutation in *word* form:
 x <- rperm(4,9)
-as.word(x)
+
+# default behaviour is to print in cycle form irregardless:
+x
+
+# change default using options():
+options(print_word_as_cycle=FALSE)
+
+# objects in word form now printed using matrix notation:
+x
+
+# printing of cycle form objects not altered:
 as.cycle(x)
+
+# restore default:
+options(print_word_as_cycle=TRUE)
+
+as.character_cyclist(list(1:4,10:11,20:33))  # x a cyclist;
+as.character_cyclist(list(c(1,5,4),c(2,2)))  # does not check for consistency
+as.character_cyclist(list(c(1,5,4),c(2,9)),comma=FALSE)
 }
 \keyword{symbolmath}

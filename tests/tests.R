@@ -155,3 +155,13 @@ uu <-    # should be the identity
 commutator(commutator(x,y),z^x) *
 commutator(commutator(z,x),y^z) *
 commutator(commutator(y,z),x^y) 
+
+stopifnot(all(is.id(uu)))
+
+## bug in shapepart:
+options(warn=4)
+shapepart(allperms(5))
+
+
+## bug in sgn(), issue #4:
+stopifnot(sgn(as.cycle("(12)(34)")) == 1)

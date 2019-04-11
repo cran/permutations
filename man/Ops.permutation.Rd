@@ -1,5 +1,6 @@
 \name{Ops.permutation}
 \alias{Ops.permutation}
+\alias{Ops.permutations}
 \alias{Ops}
 \alias{cycle_sum}
 \alias{group_action}

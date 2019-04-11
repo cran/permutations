@@ -76,7 +76,7 @@ f * inverse(f)
 
 
 ###################################################
-### code chunk number 12: permutations.Rnw:272-275
+### code chunk number 12: permutations.Rnw:271-274
 ###################################################
 S4 <- allperms(4)
 A4 <- S4[is.even(S4)]
@@ -84,7 +84,7 @@ A4
 
 
 ###################################################
-### code chunk number 13: permutations.Rnw:290-291
+### code chunk number 13: permutations.Rnw:289-290
 ###################################################
 A4^cyc_len(5)
 
@@ -97,31 +97,31 @@ megaminx
 
 
 ###################################################
-### code chunk number 15: permutations.Rnw:337-338
+### code chunk number 15: permutations.Rnw:336-337
 ###################################################
 a <- Pu / W * DY^-2 / Pu / DY
 
 
 ###################################################
-### code chunk number 16: permutations.Rnw:346-347
+### code chunk number 16: permutations.Rnw:345-346
 ###################################################
 a
 
 
 ###################################################
-### code chunk number 17: permutations.Rnw:354-355
+### code chunk number 17: permutations.Rnw:353-354
 ###################################################
 permorder(a)
 
 
 ###################################################
-### code chunk number 18: permutations.Rnw:362-363
+### code chunk number 18: permutations.Rnw:361-362
 ###################################################
 a^6
 
 
 ###################################################
-### code chunk number 19: permutations.Rnw:380-384
+### code chunk number 19: permutations.Rnw:379-383
 ###################################################
 X <- W / Pu * W * Pu^2 / DY^2
 Y <- LG^(-1) / DB * LB * DG      

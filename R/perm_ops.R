@@ -1,4 +1,4 @@
-"Ops.permutation" <-
+`Ops.permutation` <-
   function (e1, e2 = NULL) 
 {
     if(nargs() == 1){  #unary operator
@@ -7,7 +7,7 @@
         } else if (.Generic == "-") {
             return(inverse(e1))
     } else {
-        stop("Unary operator '", .Generic, "' is not implemented for onions")
+        stop("Unary operator '", .Generic, "' is not implemented for permutations")
     }
   }
 
@@ -28,7 +28,7 @@
         } else if (.Generic == "+") {
             return(cycle_sum(e1,e2))
         } else {
-            stop(paste("<perm>", .Generic, "<non-perm> not defined",collapse=" "))
+            stop(paste("<perm>", .Generic, "<perm> not defined",collapse=" "))
         }
     } else if (lclass && !rclass){
           if(.Generic == "^"){

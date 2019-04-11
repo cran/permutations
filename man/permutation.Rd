@@ -70,7 +70,8 @@ Function \code{cyc_len()} is a convenience wrapper for
 It is a very common error (at least, it is for me) to use \code{cycle()}
 when you meant \code{as.cycle()}.
 
-
+The print method is sensitive to the value of option
+\sQuote{\code{print_word_as_cycle}}, documented at \code{print.Rd}.
 
 }
 \value{
@@ -81,7 +82,9 @@ Returns a \code{cycle} object or a \code{word object}
 \code{\link{cyclist}}
 }
 \examples{
-word(matrix(1:8,7,8))
+word(matrix(1:8,7,8))    # default print method displays cycle form
+
+
 cycle(list(list(c(1,8,2),c(3,6)),list(1:2, 4:8)))
 
 char2cycle(c("(1,4)(6,7)","(3,4,2)(8,19)", "(56)","(12345)(78)","(78)"))
@@ -97,9 +100,7 @@ x <- rperm(10,7)
 y <- rperm(10,7)
 as.cycle(commutator(x,y))
 
-cycle(sapply(seq_len(9),function(n){list(list(seq_len(n)))}))
-
-cycle(sapply(seq_len(18),cyc_len))
+cycle(sapply(seq_len(9),cyc_len))
 
 }
 \keyword{symbmath}

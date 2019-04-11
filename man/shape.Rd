@@ -1,5 +1,6 @@
 \name{shape}
 \alias{shape}
+\alias{padshape}
 \alias{shape_cyclist}
 \alias{shapepart}
 \alias{shapepart_cyclist}
@@ -11,6 +12,7 @@ cycle form.
 \usage{
 shape(x, drop = TRUE,id1=TRUE)
 shape_cyclist(cyc,id1=TRUE)
+padshape(x, drop = TRUE, n=NULL)
 shapepart(x)
 shapepart_cyclist(cyc,n=NULL)
 }
@@ -62,7 +64,5 @@ shapepart(rperm(10,5))
 
 shape_cyclist(list(1:4,8:9))
 shapepart_cyclist(list(1:4,8:9))
-
-
 
 }

@@ -15,7 +15,7 @@
     stopifnot(is.matrix(M))
     storage.mode(M) <- "integer"
     if(nrow(M)>0){
-        jj <- apply(M,1, singleword_valid)
+      stopifnot(all(apply(M,1, singleword_valid)))
     }
         class(M) <- c("permutation", "word")  # this is the *only*
                                               # time an object is
@@ -477,6 +477,17 @@ rperm <- function(n,r,moved=NA){
     return(out)
 }
 
+padshape <- function(x, drop=TRUE, n=NULL){
+  if(is.null(n)){n <- max(x)}
+  f <- function(s){sort(c(s,rep(1L,n-sum(s))),decreasing=TRUE)}
+  out <- lapply(shape(x,drop=FALSE),f)
+  if(drop & (length(x)==1)){
+    out <- unlist(out)
+  }
+  return(out)
+}
+
+
 shape_cyclist <- function(cyc,id1=TRUE){  # use case: shape_cyclist(list(1:4,8:9))
     out <- unlist(lapply(cyc,length))
     if(id1 & is.null(out)){
@@ -487,7 +498,11 @@ shape_cyclist <- function(cyc,id1=TRUE){  # use case: shape_cyclist(list(1:4,8:9
 }
 
 shapepart_cyclist <- function(cyc,n=NULL){
-    nmax <-  max(unlist(cyc,recursive=TRUE))
+    if(length(cyc)>0){
+      nmax <-  max(unlist(cyc,recursive=TRUE))
+    } else {
+      nmax <- n
+    }
     if(is.null(n)){ n <- nmax } 
     if(n<nmax){stop("value of n too small")}
     out <- rep(0,n)
@@ -587,8 +602,12 @@ rep.permutation <- function(x, ...){
 }
 
 sgn <- function(x){
-    x <- as.cycle(x)
-    unlist(lapply(shape(as.cycle(x)),function(o){ifelse(is.null(o),1,1-2*sum(o-1)%%2)}))
+  .f <- function(o){ifelse(is.null(o), 1, 1 - 2 * sum(o - 1)%%2)}
+  if(length(x)==1){
+    return(.f(shape(x)))
+  } else {
+    return(unlist(lapply(shape(as.cycle(x)), .f)))
+  }
 }
 
 is.even <- function(x){sgn(x)==1}
@@ -695,3 +714,26 @@ permprod <- function(x){
 }
    
 "allperms" <- function(n){ word(t(perms(n))) }
+
+`cayley` <- function(x){
+  x <- as.cycle(x)
+  if(is.null(names(x))){names(x) <- print(x)}
+
+  f <- Vectorize(function(i,j){
+    jj <- x==x[i]*x[j]
+    if(sum(jj)==1){
+      return(names(x)[jj])
+    } else {
+      return(NA)
+    }
+  }
+  )
+  
+#  out <- noquote(outer(seq_along(x),seq_along(x),Vectorize(function(i,j){names(x)[which(x==x[i]*x[j])]})))
+  out <- noquote(outer(seq_along(x),seq_along(x),f))
+  rownames(out) <- names(x)
+  colnames(out) <- names(x)
+  return(out)
+  
+}
+  
