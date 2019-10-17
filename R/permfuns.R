@@ -48,6 +48,18 @@
     }
 }
 
+`permutation` <- function(x){
+  if(is.matrix(x)){
+    return(word(x))
+  } else if(is.character(x)){
+    return(char2cycle(x))
+  } else if(is.list(x)){
+    return(cycle(x))
+  } else {
+    stop("not recognised")
+  }
+}
+
 is.id <- function(x){ UseMethod("is.id",x) }
 
 is.id_single_cycle <- function(x){ is.null(unlist(x)) }
@@ -219,6 +231,7 @@ as.cycle <- function(x){   # does its best to coerce to cycle form.
 }
 
 cyc_len <- function(n){as.cycle(seq_len(n))}
+shift_cycle <- cyc_len
 
 char2cyclist_single <- function (x){
     
@@ -240,8 +253,9 @@ char2cyclist_single <- function (x){
 }
 
 char2cycle <- function(char){
-    ## char2cycle(c("(1,4)(6,7)","(3,4,2)(8,19)", "(56)","(12345)(78)","(78)"))
-    cycle(sapply(char,char2cyclist_single,simplify=FALSE))
+  out <- cycle(sapply(char,char2cyclist_single,simplify=FALSE))
+  if(is.null(names(char))){names(out) <- NULL}
+  return(out)
 }
 
 cycle2word <- function(x,n=NULL){  # cycle2word(as.cycle(1:5))
@@ -611,6 +625,7 @@ sgn <- function(x){
 }
 
 is.even <- function(x){sgn(x)==1}
+is.odd <- function(x){sgn(x) == -1}
 
 are_conjugate_single <- function(a,b){  # difficulties arise with the identity.
     stopifnot((length(a)==1) & (length(b)==1))
@@ -627,6 +642,12 @@ are_conjugate <- function(x,y){
     jj <- helper(x,y)
     apply(jj,1,function(ind){are_conjugate_single(x[ind[1]], y[ind[2]])})
 }
+
+
+
+"%~%" <- function(x,y){UseMethod("%~%")}
+"%~%.permutation" <- function(x,y){are_conjugate(x,y)}
+
 
 as.function.permutation <- function(x,...){
     a <- NULL # to suppress the warning about 'no visible binding for global variable 'a' 
@@ -717,7 +738,12 @@ permprod <- function(x){
 
 `cayley` <- function(x){
   x <- as.cycle(x)
-  if(is.null(names(x))){names(x) <- print(x)}
+  if(is.null(names(x))){
+    sink(ifelse(.Platform$OS.type == "windows", "NUL:", "/dev/null"))
+    names(x) <- print(x)
+    sink()
+  }
+
 
   f <- Vectorize(function(i,j){
     jj <- x==x[i]*x[j]
@@ -736,4 +762,36 @@ permprod <- function(x){
   return(out)
   
 }
-  
+
+`perm_matrix` <- function(p){
+    s <- size(p)
+    p <- as.word(p)
+    stopifnot(length(p)==1)
+    M <- diag(rep(1L,s))[p,]  # the meat
+    rownames(M) <- formatC(seq_len(s),width=ceiling(log10(s+0.1)),format="d",flag="0")
+    colnames(M) <- rownames(M)
+    return(M)
+}
+
+`is.perm_matrix` <- function(M){
+  if(
+      is.matrix(M)         &&
+      nrow(M) == ncol(M)   &&
+      all(M %in% c(0L,1L)) &&
+      all(rowSums(M)==1)   &&
+      all(colSums(M)==1)){
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
+
+`pm_to_perm` <- function(M){
+    if(is.perm_matrix(M)){
+        return(as.word(as.vector(which(t(M)>0,arr.ind=TRUE)[,1,drop=TRUE])))
+    } else {
+        stop("not a permutation matrix")
+    }
+}
+
+
