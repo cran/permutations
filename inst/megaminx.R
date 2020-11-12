@@ -1,3 +1,5 @@
+library("permutations")
+
 jj <- array(c(
     010,012,014,016,018,  011,013,015,017,019,  021,033,045,057,069,  022,034,046,058,060,  023,035,047,059,061,
     020,022,024,026,028,  021,023,025,027,029,  015,067,091,081,035,  016,068,092,082,036,  017,069,093,083,037,
@@ -15,8 +17,10 @@ jj <- array(c(
 
 megaminx <- rep(id,12)
 
+chosen <- seq_len(5)  # For megaminx use seq_len(5); for kilominx, use  chosen <- c(2,3,5) 
+
 for(i in seq_len(12)){
-    for(j in seq_len(5)){
+    for(j in chosen){
         megaminx[i] <- megaminx[i] + as.cycle(jj[,j,i])
     }
 }
