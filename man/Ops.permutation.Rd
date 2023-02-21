@@ -15,7 +15,7 @@
 \alias{ccps}
 \alias{helper}
 \title{Arithmetic Ops Group Methods for permutations}
-\description{
+\description{\loadmathjax
   Allows arithmetic operators to be used for manipulation of permutation objects
   such as addition, multiplication, division, integer powers, etc.
 }
@@ -57,12 +57,12 @@ helper(e1,e2)
 
   Raising permutations to integer powers, as in \code{a^n}, is
   \code{cycle_power(a,n)}; it coerces \code{a} to cycle form and returns
-  a cycle. Negative and zero values of \code{n} operate as expected.
-  Function \code{cycle_power()} is vectorized; it calls
-  \code{cycle_power_single()}, which is not. This calls \code{vps()}
-  (\dQuote{Vector Power Single}), which checks for simple cases such as
-  \code{pow=0} or the identity permutation; and function \code{vps()}
-  calls function \code{ccps()} which performs the actual
+  a cycle (even if \mjseqn{n=1}).  Negative and zero values of \code{n}
+  operate as expected.  Function \code{cycle_power()} is vectorized; it
+  calls \code{cycle_power_single()}, which is not.  This calls
+  \code{vps()} (\dQuote{Vector Power Single}), which checks for simple
+  cases such as \code{pow=0} or the identity permutation; and function
+  \code{vps()} calls function \code{ccps()} which performs the actual
   number-theoretic manipulation to raise a cycle to a power.
 
   Raising a permutation to the power of another permutation, as in
@@ -98,38 +98,57 @@ helper(e1,e2)
 \note{
   The class of the returned object is the appropriate one.
 
-  It would be nice to define a unary operator which inverted a
-  permutation.  I do not like \dQuote{\code{id/x}} to represent a
-  permutation inverse: the idiom introduces an utterly redundant object
-  (\dQuote{\code{id}}), and forces the use of a binary operator where a
-  unary operator is needed.
+  Unary operators to invert a permutation are problematic in the
+  package.  I do not like using \dQuote{\code{id/x}} to represent a
+  permutation inverse: the idiom introduces an utterly redundant
+  object (\dQuote{\code{id}}), and forces the use of a binary operator
+  where a unary operator is needed.  Similar comments apply to
+  \dQuote{\code{x^-1}}, which again introduces a redundant object
+  (\code{-1}) and uses a binary operator.
+
+  Currently, \dQuote{\code{-x}} returns the multiplicative inverse of
+  \code{x}, but this is not entirely satisfactory either, as it uses
+  additive notation: the rest of the package uses multiplicative
+  notation.  Thus \code{x*-x == id}, which looks a little odd but OTOH
+  noone has a problem with \code{x^-1} for inverses.
   
-  The natural unary operator would be the exclamation mark, \code{!x}.
-  However, redefining the exclamation mark to give permutation inverses,
-  while possible, is not desirable because its precedence is too low.
-  One would like \code{!x*y} to return \code{inverse(x)*y} but instead
-  standard precendence rules means that it returns \code{inverse(x*y)}.
-  This caused such severe cognitive dissonance that I removed it.
-  
-  There does not appear to be a way to define a new unary operator due
-  to the construction of the parser.
+  I would like to follow \proglang{APL} and use \dQuote{\code{/x}},
+  but this does not seem to be possible in \proglang{R}.  The natural
+  unary operator would be the exclamation mark \dQuote{\code{!x}}.
+  However, redefining the exclamation mark to give permutation
+  inverses, while possible, is not desirable because its precedence is
+  too low.  One would like \code{!x*y} to return \code{inverse(x)*y}
+  but instead standard precedence rules means that it returns
+  \code{inverse(x*y)}.  Earlier versions of the package interpreted
+  \code{!x} as \code{inverse(x)}, but it was a disaster: to implement
+  the commutator \mjeqn{[x,y]=x^{-1}y^{-1}xy}{[x,y]=x^(-1)y^(-1)xy},
+  for example, one would like to use \code{!x*!y*x*y}, but this is
+  interpreted as \code{!(x*(!y*(x*y)))}; one has to use
+  \code{(!x)*(!y)*x*y}.  I found myself having to use heaps of
+  brackets everywhere.  This caused such severe cognitive dissonance
+  that I removed exclamation mark for inverses from the package.  I
+  might reinstate it in the future.  There does not appear to be a way
+  to define a new unary operator due to the construction of the
+  parser.
   
 }
 \author{
   Robin K. S. Hankin
 }
 \examples{
-x <- rperm(20,9) # word form
-y <- rperm(20,9) # word form
 
-x*y  # word form
 
-x^5  # coerced to cycle form
+x <- rperm(10,9) # word form
+y <- rperm(10,9) # word form
 
-x^as.cycle(1:5)  # group action; coerced to word.
+x*y  # products are given in word form but the print method coerces to cycle form
+print_word(x*y)
+
+x^5  # powers are given in cycle form
+
+x^as.cycle(1:5)  # group action (not integer power!); coerced to word.
 
 x*inverse(x) == id  # all TRUE
-
 
 
 # the 'sum' of two permutations is defined if their cycles are disjoint:
@@ -137,8 +156,6 @@ as.cycle(1:4) + as.cycle(7:9)
 
 data(megaminx)
 megaminx[1] + megaminx[7:12] 
-
-
 
 }
 \keyword{symbolmath}

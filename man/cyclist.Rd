@@ -7,12 +7,8 @@
 \alias{nicify_cyclist}
 \alias{nicify}
 \alias{remove_length_one}
-\title{
-details of cyclists
-}
-\description{
-  Various functionality to deal with cyclists 
-}
+\title{details of cyclists}
+\description{Various functionality to deal with cyclists}
 \usage{
 vec2cyclist_single(p)
 vec2cyclist_single_cpp(p)
@@ -35,26 +31,29 @@ nicify_cyclist(x,rm1=TRUE, smallest_first=TRUE)
 A \dfn{cyclist} is an object corresponding to a permutation P.  It is a
 list with elements that are integer vectors corresponding to the cycles
 of P.  This object is informally known as a cyclist, but there is no S3
-class corresponding to it.
+class corresponding to it.  In general use, one should not usually deal
+with cyclists at all: they are internal low-level objects not intended
+for the user.
 
 An object of S3 class \dfn{cycle} is a (possibly named) list of
 cyclists.  NB: there is an unavoidable notational clash here.  When
 considering a single permutation, \dQuote{cycle} means group-theoretic
-cycle; when considering R objects, \dQuote{cycle} means \dQuote{an R
-object of class \dfn{cycle} whose elements are permutations written in
-cycle form}.
+cycle [eg \mjeqn{1\longrightarrow 2\longrightarrow 3\longrightarrow 1}{1
+-> 2 ->3 ->1}]; when considering \R objects, \dQuote{cycle} means
+\dQuote{an \R object of class \dfn{cycle} whose elements are permutations
+written in cycle form}.
 
-The elements of a cyclist are the disjoint group-theoretic cycles.  Note the
-redundancies inherent: firstly, because the cycles commute, their order
-is immaterial (and a list is ordered); and secondly, the cycles
+The elements of a cyclist are the disjoint group-theoretic cycles.  Note
+the redundancies inherent: firstly, because the cycles commute, their
+order is immaterial (and a list is ordered); and secondly, the cycles
 themselves are invariant under cyclic permutation.  Heigh ho.
 
 A cyclist may be poorly formed in a number of ways: the cycles may
 include repeats, or contain elements which are common to more than one
-cycle.  Such problems are detected by \code{cycle.valid()}.  Also, there
-are less serious problems: the cycles may include length-one cycles; the
-cycles may start with an element that is not the smallest.  These issues
-are dealt with by \code{nicify_cyclist()}.
+cycle.  Such problems are detected by \code{cyclist_valid()}.  Also,
+there are less serious problems: the cycles may include length-one
+cycles; the cycles may start with an element that is not the smallest.
+These issues are dealt with by \code{nicify_cyclist()}.
 
 \itemize{
 
@@ -96,11 +95,12 @@ are dealt with by \code{nicify_cyclist()}.
   The user should use \code{char2cycle()} which executes validity checks
   and coerces to a cycle object.
 }
+
+See also the `cyclist` vignette which contains more details and examples.
+
 }
 
-\author{
-Robin K. S. Hankin
-}
+\author{Robin K. S. Hankin}
 \seealso{
 \code{\link{as.cycle}},\code{\link{fbin}},\code{\link{valid}}
 }

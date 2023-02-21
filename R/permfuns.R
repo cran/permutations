@@ -78,7 +78,7 @@ is.word <- function(x){ inherits(x, "word") }
 
 is.cycle <- function(x){ inherits(x,"cycle") }
 
-is.permutation <- function(x){ inherits(x,"permutaton") }
+is.permutation <- function(x){ inherits(x,"permutation") }
 
 as.matrix.word <- function(x,...){unclass(x)}
 
@@ -184,24 +184,36 @@ as.word <- function(x,n=NULL){
 print.word <- function(x, h=getOption("print_word_as_cycle"), ...){  
 
   if(!identical(h,FALSE)){
-    jj <- as.cycle(x)
-    print(jj)
-    return(jj)
+      jj <- as.cycle(x)
+      print(jj)
+      cat("[coerced from word form]\n")
+      return(jj)
   }
+    print_word(x)
+}
 
-  ## contortions needed because x might have zero columns
+`print_word` <- function(x){
+    x <- as.word(x)
+    ## contortions needed because x might have zero columns
     given <- x
     x <- unclass(x)
+    ps <- getOption("perm_set")
     if(is.null(rownames(x)) & length(x)>0){
         rownames(x) <- paste("[",seq_len(nrow(x)),"]",sep="")
     }
     if(ncol(x)>0){
-        colnames(x) <- paste("{",seq_len(ncol(x)),"}",sep="")
+        if(is.null(ps)){
+            colnames(x) <- paste("{",seq_len(ncol(x)),"}",sep="")
+        } else {
+            colnames(x) <- paste("{",ps[seq_len(ncol(x))],"}",sep="")
+        }
     } else {
         cat(" {}")
     }
-    jj <- x        
-    jj[jj==col(jj)] <- '.'
+    jj <- x
+    dots <- x==col(x)
+    jj[dots] <- '.'
+    if(!is.null(ps)){jj[!dots] <- ps[x[!dots]]}
     print(noquote(jj))
     return(invisible(given))
 }
@@ -216,7 +228,7 @@ as.cycle <- function(x){   # does its best to coerce to cycle form.
         return(x)
     } else if(is.character(x)){
         return(char2cycle(x))
-    } else if(is.vector(x)){
+    } else if(is.vector(x,mode="numeric")){
         return(cycle(list(list(x))))
     } else if(is.list(x) & all(unlist(lapply(x,is.vector)))){ # a cyclist
         return(cycle(list(x)))
@@ -269,8 +281,8 @@ cycle2word <- function(x,n=NULL){  # cycle2word(as.cycle(1:5))
 }
 
 cyclist2word_single <- function(cyc,n){     #converts a cyclist to a single
-                                        #permutation (vecor):
-                                        #cycle2word_single(list(c(1,4,3),c(7,8)))
+                                          #permutation (vector):
+                                        #cyclist2word_single(list(c(1,4,3),c(7,8)))
     
     if(length(unlist(cyc))==0){ return(seq_len(n)) }  # checking for the identity
     maxn <-  max(unlist(cyc,recursive=TRUE))
@@ -293,15 +305,15 @@ cyclist2word_single <- function(cyc,n){     #converts a cyclist to a single
 print.cycle <- function(x,...){  # x is a cycle.  Use case: print(cycle(list(x,y,z)))
     
     if((length(unlist(x))>0)){
-        if(max(unlist(x,recursive=TRUE)) > 9){
+        uc <- getOption("comma")
+        if(isTRUE(uc)){
             comma <- TRUE
-        } else {
+        } else if(isFALSE(uc)){
             comma <- FALSE
+        } else {  # default; prototypically uc=NULL
+            comma <- max(unlist(x,recursive=TRUE)) > 9
         }
-    } else {
-        comma <- FALSE
     }
-    
     out <- unlist(lapply(x,as.character_cyclist,comma=comma))
     if(is.null(out)){
         cat("cycle(0)\n")
@@ -311,6 +323,8 @@ print.cycle <- function(x,...){  # x is a cycle.  Use case: print(cycle(list(x,y
     }
 }
 
+print_cycle <- function(x){print.cycle(as.cycle(x))}
+
 as.character_cyclist <- function(y,comma=TRUE){
     
     ## Use case:
@@ -319,7 +333,8 @@ as.character_cyclist <- function(y,comma=TRUE){
     ## as.character_cyclist(list(c(1,5,4),c(2,9)),comma=TRUE)
     
     if(length(y)==0){return("()")}
-    
+    ps <- getOption("perm_set")
+    if(!is.null(ps)){y <- lapply(y,function(x){ps[x]})}
     if(comma){s <- ","} else {s <- ""}
     paste(sapply(y,function(u){paste(paste("(",paste(u,collapse=s),sep=""),")",sep="")}),collapse="")
 }
@@ -468,7 +483,7 @@ inverse.word <- function(x){   # takes a word, returns a word.  inverse.word(rpe
 
 inverse.cycle <- function(x){ cycle(lapply(x,inverse_cyclist_single)) }
 
-rperm <- function(n,r,moved=NA){
+rperm <- function(n=10,r=7,moved=NA){
     if(is.na(moved)){
         return(word(matrix(replicate(n,sample(seq_len(r))),n,r,byrow=TRUE)))
     } else {
@@ -555,11 +570,11 @@ size.cycle <- function(x){
 }
 
 "size<-.cycle" <- function(x, value){
-    stop("you cannot alter the size of a cycle")
+    stop("cannot alter the size of a cycle")
 }
 
 "length<-.permutation" <- function(x,value){
-    stop("you cannot change the length of a permutation")
+    stop("cannot change the length of a permutation")
 }
 
 length.word <- function(x){ nrow(x) }
@@ -763,12 +778,16 @@ permprod <- function(x){
   
 }
 
-`perm_matrix` <- function(p){
-    s <- size(p)
-    p <- as.word(p)
+`perm_matrix` <- function(p,s=size(p)){
+    p <- as.word(p,s)
     stopifnot(length(p)==1)
     M <- diag(rep(1L,s))[p,]  # the meat
-    rownames(M) <- formatC(seq_len(s),width=ceiling(log10(s+0.1)),format="d",flag="0")
+    jj <-    getOption("perm_set")
+    if(is.null(jj)){
+      rownames(M) <- formatC(seq_len(s),width=ceiling(log10(s+0.1)),format="d",flag="0")
+    }  else {
+      rownames(M) <- jj[seq_len(s)]
+    }
     colnames(M) <- rownames(M)
     return(M)
 }
@@ -790,8 +809,11 @@ permprod <- function(x){
     if(is.perm_matrix(M)){
         return(as.word(as.vector(which(t(M)>0,arr.ind=TRUE)[,1,drop=TRUE])))
     } else {
-        stop("not a permutation matrix")
+        stop("'M' not a permutation matrix")
     }
 }
 
+setOldClass("permutation")
+setMethod("[", signature(x="dot",i="permutation",j="permutation"),function(x, i, j, drop){commutator(i,j)})
 
+`capply` <- function(X,fun,...){cycle(lapply(as.cycle(X),function(x){lapply(x,fun,...)}))}

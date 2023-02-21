@@ -2,12 +2,14 @@
 \alias{print.permutation}
 \alias{print.word}
 \alias{print.cycle}
+\alias{print_word}
+\alias{print_cycle}
 \alias{as.character.cycle}
 \alias{as.character_cyclist}
 \title{
 Print methods for permutation objects
 }
-\description{
+\description{\loadmathjax
 Print methods for permutation objects with matrix-like printing for
 words and bracket notation for cycle objects.
 }
@@ -46,6 +48,44 @@ Returns its argument invisibly, after printing it.
   Function \code{as.character_cyclist()} is an internal function used by
   \code{print.cycle()}, and is not really designed for the end-user.  It
   takes a cyclist and returns a character string.
+
+  Function \code{print_word()} and \code{print_cycle()} are provided for
+  power users.  These functions print their argument directly as word or
+  cycle form; they coerce to the appropriate form.  Use
+  \code{print_word()} if you have a permutation in word form and want to
+  inspect it as a word form but (for some reason) do not want to set
+  \code{options("print_word_as_cycle")}.  See \code{size.Rd} for a
+  use-case.
+
+  The print method includes experimental functionality to display
+  permutations of sets other than the default of integers
+  \mjeqn{1,2,\ldots, n}{1,2,...,n}.  Both cycle and word print methods
+  are sensitive to option \code{perm_set}: the default value of
+  \code{NULL} means to use integers.  The symbols may be the elements of
+  any character vector; use idiom such as
+
+  \preformatted{options("perm_set" = letters)}
+
+  to override the default.  But beware!  If the permutation includes
+  numbers greater than the length of \code{perm_set}, then \code{NA}
+  will be printed.  It is possible to use vectors with elements of more
+  than one character (e.g. \code{state.abb}).
+
+  In the printing of cycle objects, commas are controlled with option
+  \code{"comma"}.  The default \code{NULL} means including commas in the
+  representation if the size of the permutation exceeds 9.  This works
+  well for integers but is less suitable when using letters or state
+  abbreviations.  Force the use of commas by setting the option to
+  \code{TRUE} or \code{FALSE}, e.g.
+
+  \preformatted{options("comma" = TRUE)}
+
+  The print method does not change the internal representation of word
+  or cycle objects, it only affects how they are printed.
+
+  There is a package vignette (type \code{vignette("print")} at the
+  command line) which gives more details and long-form documentation.
+
 }
 
 \author{
@@ -77,5 +117,9 @@ options(print_word_as_cycle=TRUE)
 as.character_cyclist(list(1:4,10:11,20:33))  # x a cyclist;
 as.character_cyclist(list(c(1,5,4),c(2,2)))  # does not check for consistency
 as.character_cyclist(list(c(1,5,4),c(2,9)),comma=FALSE)
+
+options("perm_set" = letters)
+rperm(r=9)
+options("perm_set" = NULL)  # restore default
 }
 \keyword{symbolmath}

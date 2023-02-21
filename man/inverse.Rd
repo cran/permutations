@@ -25,7 +25,7 @@ inverse_cyclist_single(cyc)
 }
 \details{
 The package provides methods to invert objects of class \code{word}
-(the R idiom is \code{W[W] <- seq_along(W)}) and also objects of class
+(the \R idiom is \code{W[W] <- seq_along(W)}) and also objects of class
 \code{cycle} (the idiom is
 \code{lapply(cyc,function(o){c(o[1],rev(o[-1]))})}).
 
@@ -40,14 +40,29 @@ form.
 \value{
 Function \code{inverse()} returns an object of the same class as its argument.
 }
-\author{
-Robin K. S. Hankin
+\author{Robin K. S. Hankin}
+\note{
+
+Inversion of words is ultimately performed by function
+\code{inverse_word_single()}:
+
+\preformatted{
+inverse_word_single <- function(W){
+    W[W] <- seq_along(W)
+    return(W)
 }
-\seealso{
-\code{\link{cycle_power}}
 }
+
+which can be replaced by \code{order()} although this is considerably
+less efficient, especially for small sizes of permutations.  One of my
+longer-term plans is to implement this in \proglang{C}, although it is
+not clear that this will be any faster.
+
+}
+\seealso{\code{\link{cycle_power}}}
 \examples{
 x <- rperm(10,6)
+x
 inverse(x)
 
 all(is.id(x*inverse(x)))  # should be TRUE
