@@ -3,18 +3,19 @@
 \alias{print.word}
 \alias{print.cycle}
 \alias{print_word}
+\alias{print_word_as_cycle}
 \alias{print_cycle}
 \alias{as.character.cycle}
 \alias{as.character_cyclist}
 \title{
 Print methods for permutation objects
 }
-\description{\loadmathjax
+\description{
 Print methods for permutation objects with matrix-like printing for
 words and bracket notation for cycle objects.
 }
 \usage{
-\method{print}{cycle}(x, ...)
+\method{print}{cycle}(x, give_string=FALSE, ...)
 \method{print}{word}(x, h = getOption("print_word_as_cycle"), ...)
 as.character_cyclist(y,comma=TRUE)
 }
@@ -29,9 +30,12 @@ as.character_cyclist(y,comma=TRUE)
   \item{y,comma}{In \code{as.character.cyclist()}, argument \code{y}
     is a list of cycles (a cyclist); and \code{comma} is Boolean,
     specifying whether to include a comma in the output}
+  \item{give_string}{In function}
 }
 \value{
-Returns its argument invisibly, after printing it.
+Returns its argument invisibly, after printing it (except for
+  \code{print.cycle(x,give_string=TRUE)}, in which case a character
+  vector is returned).
 }
 
 \details{
@@ -57,9 +61,18 @@ Returns its argument invisibly, after printing it.
   \code{options("print_word_as_cycle")}.  See \code{size.Rd} for a
   use-case.
 
+  Coercing a cycle to a character vector can be done with
+  \code{as.character()}, which returns a character vector that is
+  suitable for \code{as.cycle()}, so if \code{a} is a cycle
+  \code{all(as.cycle(as.character(a)) == a)} will return \code{TRUE}.
+  If you want to use the options of the print method, use
+  \code{print.cycle(...,give_string=TRUE)}, which respects the print
+  options discussed below.  Neither of these give useful output if their
+  argument is in word form.
+
   The print method includes experimental functionality to display
   permutations of sets other than the default of integers
-  \mjeqn{1,2,\ldots, n}{1,2,...,n}.  Both cycle and word print methods
+  \eqn{1,2,\ldots, n}{1,2,...,n}.  Both cycle and word print methods
   are sensitive to option \code{perm_set}: the default value of
   \code{NULL} means to use integers.  The symbols may be the elements of
   any character vector; use idiom such as
@@ -83,6 +96,15 @@ Returns its argument invisibly, after printing it.
   The print method does not change the internal representation of word
   or cycle objects, it only affects how they are printed.
 
+  The print method is sensitive to experimental option
+  \code{print_in_length_order} (via function
+  \code{as.character_cyclist()}).  If \code{TRUE}, permutations cycle
+  form will be printed but with the cycles in increasing length order.
+  Set it with
+  
+  \preformatted{options("print_in_length_order" = TRUE)}
+
+  
   There is a package vignette (type \code{vignette("print")} at the
   command line) which gives more details and long-form documentation.
 

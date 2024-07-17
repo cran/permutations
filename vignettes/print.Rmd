@@ -1,17 +1,17 @@
 ---
 title: "Print methods in the permutations package"
 author: "Robin K. S. Hankin"
-date: "`r Sys.Date()`"
+output: html_vignette
+bibliography: permutations.bib
 vignette: >
   %\VignetteIndexEntry{print methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-
-<p style="text-align: right;">
-![](`r system.file("help/figures/permutations.png", package = "permutations")`){width=10%}
-</p>
+```{r out.width='20%', out.extra='style="float:right; padding:10px"',echo=FALSE}
+knitr::include_graphics(system.file("help/figures/permutations.png", package = "permutations"))
+```
 
 
 ```{r set-options, echo = FALSE}
@@ -20,8 +20,10 @@ options(width = 80, tibble.width = Inf)
 suppressMessages(suppressWarnings(require("permutations")))
 ```
 
-The `permutations` package has a print method which includes a number
-of user-configurable options which are illustrated and motivated here.
+To cite the permutations package in publications, please use
+@hankin2020.  The `permutations` package has a print method which
+includes a number of user-configurable options which are illustrated
+and motivated here.
 
 Permutations have two natural representations: word form and cycle
 form.  Internally, the package coerces a permutation from one form to
@@ -31,13 +33,15 @@ word form, while powers are more easily done using cycle form.
 
 Partly as a result of a perceptive comment from a journal reviewer,
 the package coerces to cycle form for printing as this is generally
-more comprehensible than word form.  However, the package includes
-functions `print_word()` and `print_cycle()` which can be used
-explicitly to print in either word form or cycle form as desired:
+more comprehensible than word form.  However, the package print method
+is extensively customizable.  This document covers some of the
+options.  Low-level print functionality includes `print_word()` and
+`print_cycle()` which can be used explicitly to print in either word
+form or cycle form as desired:
 
 ```{r}
 set.seed(0)
-x <- rperm(r=9)
+x <- rperm(r = 9)
 print_word(x)
 print_cycle(x)
 ```
@@ -49,7 +53,7 @@ minority.  However, the difference between word form and cycle form
 becomes more pronounced if only a small number of elements move:
 
 ```{r}
-x <- rperm(r=9,moved=3)
+x <- rperm(r = 9, moved = 3)
 print_word(x)
 print_cycle(x)
 ```
@@ -63,12 +67,12 @@ objects in cycle form.  However, the standard workflow would be to use
 R's default system, which is to print values to the console:
 
 ```{r}
-x <- rperm(n=2)
+x <- rperm(n = 2)
 y <- as.cycle(x)
-unclass(x)  # shows internal representation (x is in word form)
-unclass(y)  # shows internal representation (x is in cycle form)
-x   # default: print to console 
-y   # default: print to console 
+unclass(x) # shows internal representation (x is in word form)
+unclass(y) # shows internal representation (x is in cycle form)
+x # default: print to console
+y # default: print to console
 ```
 
 Above we see that, by default, objects in word form are coerced to
@@ -87,7 +91,7 @@ This behaviour can be confusing because the same permutation can have
 different print styles, so we reinstate the default:
 
 ```{r}
-options(print_word_as_cycle = TRUE)  # restore default
+options(print_word_as_cycle = TRUE) # restore default
 ```
 
 Most people seem to prefer printing in cycle form.
@@ -99,7 +103,7 @@ If we have 10 or more elements then we need a comma.  This is added by
 default:
 
 ```{r}
-x <- rperm(r=15,moved=4)
+x <- rperm(r = 15, moved = 4)
 print_cycle(x)
 ```
 
@@ -111,7 +115,7 @@ values are respected:
 
 ```{r}
 options("comma" = TRUE)
-rperm(3,r=9)   # commas printed irregardless
+rperm(3, r = 9) # commas printed irregardless
 ```
 
 Above we see the commas making the output somewhat prolix, but not a
@@ -121,10 +125,10 @@ necessary to interpret strings like `124` which might be `1,2,4` or
 
 ```{r}
 options("comma" = FALSE)
-x <- rperm(3,r=20) 
-x     # commas not printed irregardless
+x <- rperm(3, r = 20)
+x # commas not printed irregardless
 options("comma" = NULL) # restore default
-x     # default for comparison
+x # default for comparison
 ```
 
 Above, the absence of commas is somewhat confusing, default restored.
@@ -142,7 +146,7 @@ permutation.
 
 ```{r}
 set.seed(0)
-x <- rperm(n=3)
+x <- rperm(n = 3)
 dput(x)
 x
 ```
@@ -162,7 +166,7 @@ However, the use of commas is somewhat problematic, and by default the
 print method uses the $>9$ criterion for including a comma:
 
 ```{r}
-(xx <- rperm(n=2,r=26))
+(xx <- rperm(n = 2, r = 26))
 ```
 
 Above we see that commas are included (because $26>9$) but it probably
@@ -178,7 +182,7 @@ One side-effect of using a finite set of symbols is that the print
 method might run out of symbols:
 
 ```{r}
-(z <- rperm(n=2,r=50))
+(z <- rperm(n = 2, r = 50))
 ```
 
 Above we see `NA` printed where the symbol's index exceeds 26 (also
@@ -192,7 +196,38 @@ options(comma = TRUE)
 z
 ```
 
-Above we use state abbreviations (a builtin R dataset) and also direct
+## Cycles in length order 
+
+
+Consider the following:
+
+```{r rgivshap}
+options(perm_set = NULL) # revert to numbers
+options(comma = FALSE) # supress comma
+x <- rgivenshape(30, 2:4)
+x
+```
+
+We see 30 random permutations with shape
+$\left(\cdot\,\cdot\right)\left(\cdot\cdot\cdot\right)\left(\cdot\cdot\cdot\right)$.
+However, because function `nicify_cyclist()` sorts each cycle so that
+the smallest element is first, then sorts the cycles by first element,
+it is not obvious that all the permutations above have the same shape.
+The print method is sensitive to experimental option
+`print_in_length_order` (via function `as.character_cyclist()`).  If
+`TRUE`, permutations cycle form will be printed but with the cycles in
+increasing length order:
+
+  
+```{r, label=showlenord}
+options("print_in_length_order" = TRUE)
+x
+```
+
+
+## Wrapup
+
+Above we used state abbreviations (a builtin R dataset) and also direct
 the print method to use commas for readability.  However, it is best
 to reset to the default, as the option persists between vignettes:
 
@@ -200,4 +235,7 @@ to reset to the default, as the option persists between vignettes:
 options(perm_set = NULL)
 options(comma = NULL)
 options(print_word_as_cycle = FALSE)
+options("print_in_length_order" = FALSE)
 ```
+
+## References {-}

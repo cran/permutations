@@ -1,3 +1,6 @@
+## ----out.width='20%', out.extra='style="float:right; padding:10px"',echo=FALSE----
+knitr::include_graphics(system.file("help/figures/permutations.png", package = "permutations"))
+
 ## ----set-options, echo = FALSE------------------------------------------------
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", dev = "png", fig.width = 7, fig.height = 3.5, message = FALSE, warning = FALSE)
 options(width = 80, tibble.width = Inf)
@@ -19,18 +22,21 @@ colnames(M) <- 1:9
 M
 
 ## -----------------------------------------------------------------------------
-M[a,]
+M[a, ]
 
 ## -----------------------------------------------------------------------------
-all(M[as.word(id,9),] == diag(9))
-all(M[a*b,] == M[a,] %*% M[b,])
+all(M[as.word(id, 9), ] == diag(9))
+all(M[a * b, ] == M[a, ] %*% M[b, ])
 
 ## -----------------------------------------------------------------------------
-all(M[inverse(a),] == solve(M[a,]))
+all(M[inverse(a), ] == solve(M[a, ]))
 
 ## -----------------------------------------------------------------------------
-all(M[,a*b] == M[,a] %*% M[,b])
+all(M[, a * b] == M[, a] %*% M[, b])
 
 ## -----------------------------------------------------------------------------
-all(M[,b*a] == M[,a] %*% M[,b])
+all(M[, b * a] == M[, a] %*% M[, b])
+
+## ----label=restore_default, include=FALSE-------------------------------------
+options("print_word_as_cycle" = FALSE)
 

@@ -6,9 +6,7 @@
 \alias{size<-}
 \alias{size<-.word}
 \alias{addcols}
-\title{
-Gets or sets the size of a permutation
-}
+\title{Gets or sets the size of a permutation}
 \description{
 The \sQuote{size} of a permutation is the cardinality of the set for
 which it is a bijection.
@@ -44,6 +42,11 @@ Setting functions cannot decrease the size of a permutation; use
 It is meaningless to change the size of a \code{cycle} object.  Trying
 to do so will result in an error.  But you can coerce cycle objects to
 \code{word} form, and change the size of that.
+
+Function \code{size<-.word()} [as in \code{size(x) <- 9}] trims its
+argument down with \code{trim()} and then adds fixed elements if
+necessary.  Compare \code{addcols()}, which works only on permutations
+in word form.
 
 }
 \author{Robin K. S. Hankin}

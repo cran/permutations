@@ -22,3 +22,11 @@
 - capply() functionality added
 - more flexible print method
 - bugfix: perm_matrix() now respects perm_set
+
+# 1.1-5
+
+- consistentification
+- improvements to documentation
+- bugfix to orbit()
+- github workflows for QC and coverage
+- code of conduct and contributing files

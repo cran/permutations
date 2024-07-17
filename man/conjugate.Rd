@@ -28,25 +28,25 @@ are_conjugate_single(a,b)
   The reason  that \code{are_conjugate_single()} is a separate function
   and not bundled inside \code{are_conjugate()} is that dealing with the
   identity permutation is a pain in the arse.
-  
 }
-\value{
-Returns a vector of Booleans
-}
-\author{
-Robin K. S. Hankin
-}
+\value{Returns a vector of Booleans}
+\author{Robin K. S. Hankin}
 \note{
 The functionality detects conjugateness by comparing the shapes of two
 permutations; permutations are coerced to cycle form because function
 \code{shape()} does.
+
+The group action of conjugation, that is \eqn{x^y} or \code{y^-1 x
+ y}, is documented at \link{conjugation}.
+
+\preformatted{ are_conjugate(x,conjugate(x^y))  }
+
+is always \code{TRUE}.
+
 }
 
-\seealso{
-\code{\link{group_action}},\code{\link{shape}}
-}
+\seealso{\code{\link{conjugation}},\code{\link{shape}}}
 \examples{
-
 
 as.cycle("(123)(45)") \%~\% as.cycle("(89)(712)")  # same shape
 as.cycle("(123)(45)") \%~\% as.cycle("(89)(7124)") # different shape

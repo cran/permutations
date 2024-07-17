@@ -15,6 +15,10 @@
 \details{This function is just a convenience wrapper really.}
 \value{Returns a permutation in cycle form}
 \author{Robin K. S. Hankin}
+\note{Function \code{allcyc()} is a nice application of
+  \code{capply()}.
+}
+\seealso{\code{\link{allcyc}}}
 \examples{
 
 
@@ -24,11 +28,14 @@ capply(x,rev)
 
 all(is.id(capply(x,rev)*x))  # should be TRUE
 
-capply(rcyc(20,5,9),order)
+capply(rcyc(20,5,9),sort)
 
 capply(rcyc(20,5,9),sample)  # still 5-cycles
 
 
+capply(cyc_len(1:9),\(x)x[x>4])
+
+capply(cyc_len(1:9),\(x)x^2)
 
 
 }

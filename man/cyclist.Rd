@@ -38,7 +38,7 @@ for the user.
 An object of S3 class \dfn{cycle} is a (possibly named) list of
 cyclists.  NB: there is an unavoidable notational clash here.  When
 considering a single permutation, \dQuote{cycle} means group-theoretic
-cycle [eg \mjeqn{1\longrightarrow 2\longrightarrow 3\longrightarrow 1}{1
+cycle [eg \eqn{1\longrightarrow 2\longrightarrow 3\longrightarrow 1}{1
 -> 2 ->3 ->1}]; when considering \R objects, \dQuote{cycle} means
 \dQuote{an \R object of class \dfn{cycle} whose elements are permutations
 written in cycle form}.
@@ -62,6 +62,9 @@ These issues are dealt with by \code{nicify_cyclist()}.
   and removes length-one cycles; then orders each cycle so that the
   smallest element appears first (that is, it changes \code{(523)} to
   \code{(235)}).  It then orders the cycles by the smallest element.
+  Function \code{nicify_cyclist()} is called automatically by
+  \code{cycle()}.  Remember that \code{nicify_cyclist()} takes a
+  cyclist!
 
   \item Function \code{remove_length_one()} takes a cyclist and removes
   length-one cycles from it.
@@ -96,7 +99,8 @@ These issues are dealt with by \code{nicify_cyclist()}.
   and coerces to a cycle object.
 }
 
-See also the `cyclist` vignette which contains more details and examples.
+See also the \dQuote{cyclist} vignette [type \code{vignette("cyclist")}
+at the command line] which contains more details and examples.
 
 }
 
@@ -112,6 +116,11 @@ char2cyclist_single("(342)(19)")
 nicify_cyclist(list(c(4, 6), c(7), c(2, 5, 1), c(8, 3)))
 nicify_cyclist(list(c(4, 6), c(7), c(2, 5, 1), c(8, 3)),rm1=TRUE)
 
+nicify_cyclist(list(c(4, 6), c(7), c(2, 5, 1), c(8, 3)),smallest_first=FALSE,rm1=FALSE)
+nicify_cyclist(list(c(4, 6), c(7), c(2, 5, 1), c(8, 3)),smallest_first=FALSE,rm1=TRUE )
+nicify_cyclist(list(c(4, 6), c(7), c(2, 5, 1), c(8, 3)),smallest_first=TRUE ,rm1=FALSE)
+nicify_cyclist(list(c(4, 6), c(7), c(2, 5, 1), c(8, 3)),smallest_first=TRUE ,rm1=TRUE )
+ 
 
 cyclist2word_single(list(c(1,4,3),c(7,8)))
 

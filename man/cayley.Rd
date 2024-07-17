@@ -4,7 +4,7 @@
 \title{Cayley tables for permutation groups}
 \description{
   Produces a nice Cayley table for a subgroup of the symmetric group on
-  n elements
+  \eqn{n} elements
 }
 \usage{
 cayley(x)
