@@ -1,0 +1,202 @@
+---
+title: "Outer automorphisms in $S_6$"
+author: "Robin K. S. Hankin"
+output: html_vignette
+bibliography: permutations.bib
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{outer_automorphisms}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(rmarkdown.html_vignette.check_title = FALSE)
+library("permutations")
+set.seed(1)
+```
+
+```{r out.width='20%', out.extra='style="float:right; padding:10px"',echo=FALSE}
+knitr::include_graphics(system.file("help/figures/permutations.png", package = "permutations"))
+```
+
+To cite the `permutations` package in publications, please use
+@hankin2020.  
+
+In 1895, Otto Hölder proved the following theorem: Among symmetric
+groups, only $S_6$ has a non-trivial outer automorphism.  In this
+short document I prepare a computational version of an outer
+autormorphism from $S_6$ to itself, and numerically verify some of its
+properties.  @janusz1982 consider an outer automorphism $\phi$ of
+$S_6$ and offer the following properties:
+
+$$
+\phi(12) = (12)(36)(45)\\
+\phi(13) = (16)(24)(35)\\
+\phi(14) = (13)(25)(46)\\
+\phi(15) = (15)(26)(34)\\
+\phi(16) = (14)(23)(56)
+$$
+
+[from which we can see directly that $\phi$ is not an inner
+automorphism: inner automorphisms preserve a permutation's shape].
+Here, the general plan will be as follows.  Firstly, express any
+element of $S_6$ as a product of cycles of the form $(1n)$ for
+$2\leqslant n\leqslant 6$; secondly, apply $\phi$ as defined above
+and, assuming $\phi$ to be a homomorphism, exhibit an explicit outer
+autormorphism of $S_6$.  First we define `f()` that gives
+transpositions of the form $(1n)$:
+
+```{r definefunctionf}
+f <- function(n){as.cycle(unique(c(1,n)))}
+f(5)
+f(1)
+```
+
+We may generate any cycle using the following identity:
+
+$$
+(abcd) = \left((1b)(1c)(1d)\right)^{(1a)} = (1a)(1b)(1c)(1d)(1a)
+$$
+
+where the last equality follows from $(1a)^{-1}=(1a)$.  We will verify
+the case $a=4,b=5,c=2,d=9$, viz $(529)^{(14)}=(4529)$:
+
+```{r verifyfunctionf}
+(f(5)*f(2)*f(9))^f(4) == as.cycle("(4529)")
+```
+
+We may implement this in R, here to express cycle $(73456)$ as a
+product of transpositions of the form $(1n)$.  First we define
+`cyctopair()`, a (trivial) helper function:
+
+```{r implementcyctopair}
+cyctopair <- function(vec){ c(vec,vec[1]) }
+v <- c(7,3,4,5,6)
+cyctopair(v)
+```
+
+Then to verify the identity in package idiom, we need `lapply()`:
+
+```{r}
+Reduce("*",lapply(cyctopair(c(7,6,4,9)),f))
+```
+
+Above we see that $(7649)=(17)(16)(14)(19)(17)$.  It doesn't look like
+it has worked [because we see $(4976)$ rather than the expected
+$(7649)$], but it has:
+
+```{r lookslikefail}
+Reduce("*",lapply(cyctopair(v),f)) == as.cycle(v)
+```
+
+It might be worth checking that the identities operate correctly if
+the cycle includes a `1':
+
+```{r butitactuallyworked}
+v <- c(1,7,6,4,9)  # the "1" might break things
+cyctopair(v)
+Reduce("*",lapply(cyctopair(v),f)) == as.cycle(v)
+```
+
+Now define `holder()`, which goes through its argument replacing each
+element with a series of integers to be passed to `f()`:
+
+```{r defholder}
+holder <- function(p){
+    p <- as.cycle(p)
+    out <- rep(list(NULL),length(p))
+    for(i in seq_along(p)){
+        pi <- p[[i]]
+        if(!is.id(p[i])){
+            for(j in seq_along(pi)){
+                out[[i]] <- c(out[[i]],cyctopair(pi[[j]]))
+            }
+        } else {
+            out[[i]] <- 1
+        }
+    }
+    return(out)
+}
+```
+
+```{r calcpandhp}
+(p <- c(id,as.cycle(rperm(5))))
+(hp <- holder(p))
+```
+
+OK so now we can translate any vector of permutations into a product
+of transpositions of the form $(1n)$ for $2\leqslant n\leqslant 6$.
+Verify:
+
+```{r verifyholder}
+all(p == do.call("c",lapply(hp,function(v){as.cycle(Reduce("*",lapply(v,f)))})))
+```
+
+Now a function to translate an integer into a triple of cycles as per
+Janusz's formulation above:
+
+```{r separatejanusz}
+offer <- function(n){
+    if(n == 1){
+        return(as.word(id))
+    } else if(n == 2){
+        return(as.cycle("(12)(36)(45)"))
+    } else if(n == 3){
+        return(as.cycle("(16)(24)(35)"))
+    } else if(n == 4){
+        return(as.cycle("(13)(25)(46)"))
+    } else if(n == 5){
+        return(as.cycle("(15)(26)(34)"))
+    } else if(n == 6){
+        return(as.cycle("(14)(23)(56)"))
+    } else{
+        stop()
+    }
+}
+
+single <- function(v){ Reduce("*",lapply(v, offer)) }
+janusz <- function(p){do.call("c",lapply(holder(p),single))}
+```
+
+```{r headhold}
+(p <- c(as.word(id),rperm(10,6)))
+janusz(p)
+```
+
+
+To check that this is a homomorphism we must verify that
+$\phi(ab)=\phi(a)\phi(b)$:
+
+
+```{r checkphihomomorphism}
+a <- c(rperm(10,6),as.word(id))
+b <- c(as.word(id),rperm(10,6))
+all(janusz(a*b) == janusz(a) * janusz(b))
+```
+
+To verify that $\phi$ is an isomorphism we need to check that it is
+1-1.  The best way I have found to do it is to systematically compare
+each element with each other element.  This takes about an hour to
+run, too long for a package vignette.
+
+```{r checkphiisomorphism, eval=TRUE}
+n <- 720
+M <- matrix(0,n,n)
+x <- allperms(6)
+
+system.time(for(i in 1:n){for(j in 1:n){M[i,j] <- janusz(x[i]) == janusz(x[j])}})
+all(M[1:n,1:n] == diag(n))  # evaluates to TRUE but takes about an hour
+```
+
+There are many outer automorphisms, all conjugates of $\phi$.  For example:
+
+```{r}
+h <- function(x){janusz(x)^as.cycle("(162)(35)")}
+h(as.cycle("(12"))
+a <- c(rperm(10,6))
+b <- c(as.word(id))
+all(h(a*b) == h(a) * h(b))
+```
+
+## References {-}

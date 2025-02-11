@@ -39,7 +39,7 @@ permutations; permutations are coerced to cycle form because function
 The group action of conjugation, that is \eqn{x^y} or \code{y^-1 x
  y}, is documented at \link{conjugation}.
 
-\preformatted{ are_conjugate(x,conjugate(x^y))  }
+\preformatted{ all(are_conjugate(x,x^y)) }
 
 is always \code{TRUE}.
 
@@ -57,6 +57,9 @@ rperm(20,3) \%~\% as.cycle(1:3)
 
 z <- rperm(300,4)
 stopifnot(all(are_conjugate(z,id)==is.id(z)))
+
+z <- rperm(20)
+stopifnot(all(z \%~\% capply(z,sample)))
 
 data(megaminx)
 stopifnot(all(are_conjugate(megaminx,megaminx^as.cycle(sample(129)))))

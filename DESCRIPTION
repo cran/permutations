@@ -1,14 +1,14 @@
 Package: permutations
 Type: Package
 Title: The Symmetric Group: Permutations of a Finite Set
-Version: 1.1-5
+Version: 1.1-6
 Imports: magic,numbers,partitions (>= 1.9-17),freealg (>= 1.0-4)
 Authors@R: c(
     person(given=c("Robin", "K. S."), family="Hankin", role = c("aut","cre"), email="hankin.robin@gmail.com", comment = c(ORCID = "0000-0001-5982-0415")),
     person("Paul", "Egeler", email = "paulegeler@gmail.com", role = c("ctb"), comment = c(ORCID = "0000-0001-6948-9498"))
     )
 Maintainer: Robin K. S. Hankin <hankin.robin@gmail.com>
-Depends: R (>= 3.5.0), methods
+Depends: R (>= 4.1.0), methods
 LazyData: TRUE
 Description: Manipulates invertible functions from a finite set to
              itself.  Can transform from word form to cycle form and
@@ -18,11 +18,13 @@ Description: Manipulates invertible functions from a finite set to
 License: GPL-2
 Suggests: rmarkdown,testthat,knitr,magrittr,covr
 VignetteBuilder: knitr
-URL: https://github.com/RobinHankin/permutations
+URL: https://github.com/RobinHankin/permutations,
+        https://robinhankin.github.io/permutations/
 BugReports: https://github.com/RobinHankin/permutations/issues
+Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2024-07-17 13:29:03 UTC; rhankin
+Packaged: 2025-02-11 09:48:15 UTC; rhankin
 Author: Robin K. S. Hankin [aut, cre] (<https://orcid.org/0000-0001-5982-0415>),
   Paul Egeler [ctb] (<https://orcid.org/0000-0001-6948-9498>)
 Repository: CRAN
-Date/Publication: 2024-07-17 15:20:02 UTC
+Date/Publication: 2025-02-11 11:20:01 UTC

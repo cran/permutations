@@ -167,13 +167,14 @@ as.word <- function(x, n = NULL) {
   }
 }
 
-print.word <- function(x, h = getOption("print_word_as_cycle"), ...) {
+`print.word` <- function(x, h = getOption("print_word_as_cycle"), ...) {
   if (!identical(h, FALSE)) {
     print(as.cycle(x))
     cat("[coerced from word form]\n")
-    return(x)
+    return(invisible(x))
   } else {
-    return(print_word(x))
+      print_word(x)
+      return(invisible(x))
   }
 }
 
@@ -681,20 +682,22 @@ are_conjugate <- function(x, y) {
   })
 }
 
-
-
 "%~%" <- function(x, y) {
   UseMethod("%~%")
 }
+
 "%~%.permutation" <- function(x, y) {
   are_conjugate(x, y)
 }
 
-
 as.function.permutation <- function(x, ...) {
   a <- NULL # to suppress the warning about 'no visible binding for global variable 'a'
   x <- as.matrix(as.word(x))
-  as.function(alist(a = , x[, a]))
+  if(nrow(x) == 1){
+      return(as.function(alist(a = , x[, a])))
+  } else {
+      return(as.function(alist(a = , x[cbind(seq_len(nrow(x)), a)])))
+  }
 }
 
 commutator <- function(x, y) {
@@ -883,3 +886,32 @@ setMethod(
     return(out)
   }
 )
+
+`stabilizes` <- function(a,s){
+    unlist(
+      lapply(as.cycle(a),
+        function(x){
+          all(unlist(lapply(x,
+            function(y){
+                length(table(y %in% s)) == 1
+            } ) ) )
+        } ) )
+}
+
+`stabilizer` <- function(a,s){
+    a <- as.cycle(a)
+    a[stabilizes(a,s)]
+}
+
+`keepcyc` <- function(a, func, ...){
+    a <- as.cycle(a)
+    for(i in seq_along(a)){
+        jj <- a[[i]]
+        if(length(jj) > 0){
+            wanted <- unlist(lapply(jj, func, ...))
+            jj[!wanted] <- NULL
+            a[i] <- as.cycle(jj)
+        }
+    }
+    return(a)
+}

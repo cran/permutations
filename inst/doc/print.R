@@ -17,6 +17,9 @@ x <- rperm(r = 9, moved = 3)
 print_word(x)
 print_cycle(x)
 
+## ----setprintdefault,echo=FALSE-----------------------------------------------
+options("print_word_as_cycle" = TRUE)
+
 ## -----------------------------------------------------------------------------
 x <- rperm(n = 2)
 y <- as.cycle(x)

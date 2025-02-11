@@ -49,10 +49,10 @@ as.function(a * b)(1) # should match fb(fa(1))
 
 ## ----expresspass--------------------------------------------------------------
 a # word form
-a_active # matrix form (active)
-a_passive # matrix form (passive)
+a_active # matrix form (active); defined above
+a_passive # matrix form (passive); defined above
 
-## ----asbefore, echo=FALSE-----------------------------------------------------
+## ----asbefore, echo=TRUE------------------------------------------------------
 b_active <- rbind(1:6, as.word(b))
 rownames(b_active) <- c("place before move", "place after move")
 b_passive <- rbind(1:6, as.word(inverse(b)))
@@ -92,4 +92,17 @@ ph
 
 ## ----ghmatmult----------------------------------------------------------------
 pg %*% ph
+
+## ----label=firstactiveverif---------------------------------------------------
+pa_active <- perm_matrix(a)
+all(solve(pa_active) == t(pa_active))
+
+## ----label=checkmatmulta------------------------------------------------------
+pb_active <- perm_matrix(b)
+all(perm_matrix(a*b) == pa_active %*% pb_active)
+
+## ----label=secondpassive------------------------------------------------------
+pa_passive <- perm_matrix(inverse(a))
+pb_passive <- perm_matrix(inverse(b))
+all(solve(perm_matrix(a * b)) == pb_passive %*% pa_passive) # note order of ops
 
